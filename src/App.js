@@ -9,7 +9,8 @@ class App extends Component {
       { name: 'Manu', age: 29 },
       { name: 'Stephanie', age: 26 }
     ],
-    otherState: 'some other value'
+    otherState: 'some other value',
+    showPersons: false
   };
 
   switchNameHandler = (newName) => {
@@ -34,7 +35,15 @@ class App extends Component {
     });
   };
 
+  togglePersonsHandler = () => {
+    const doesShow = this.state.showPersons;
+    // / !doesShow works like toggle, makke the oposit of current set. If is false make true...
+    this.setState({showPersons: !doesShow});
+  }
+
   render() {
+    // **** here is no jsx is normal javascript ***
+
     const style = {
       backgroundColor: 'lightgrey',
       font: 'inherit',
@@ -43,23 +52,28 @@ class App extends Component {
       cursor: 'pointer'
     };
 
+    let persons = null;
+
+    if (this.state.showPersons) {
+      persons = (
+        // use jsx format here
+        <div>
+          {this.state.persons.map(person => {
+            return <Person
+              name={person.name}
+              age={person.age} />
+          })}
+        </div>
+      );
+    }
+
     return (
       <div className="App">
         <h1>Hi, I'm a React App</h1>
         <button
           style={style}
-          onClick={() => this.switchNameHandler('Maximiliam')}>Switch Name</button>
-        <Person
-          name={this.state.persons[0].name}
-          age={this.state.persons[0].age} />
-        <Person
-          name={this.state.persons[1].name}
-          age={this.state.persons[1].age}
-          click={this.switchNameHandler.bind(this, 'Max!')}
-          changed={this.nameChangedHandler}><strong>My Hobbies</strong>: Racing</Person>
-        <Person
-          name={this.state.persons[2].name}
-          age={this.state.persons[2].age} />
+          onClick={this.togglePersonsHandler}>Toggler Persons</button>
+        {persons}
       </div>
     );
   };
