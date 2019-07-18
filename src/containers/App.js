@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './App.css';
-// import Radium, { StyleRoot } from 'radium';
-import Person from './Person/Person';
+import classes from './App.module.css';
+import Person from '../components/Persons/Person/Person';
+import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary';
 
 class App extends Component {
   state = {
@@ -53,68 +53,49 @@ class App extends Component {
   render() {
     // **** here is no jsx is normal javascript ***
 
-    const style = {
-      backgroundColor: 'green',
-      font: 'inherit',
-      border: 'none',
-      padding: '1rem 4rem',
-      cursor: 'pointer',
-      color: 'white',
-      fontWeight: 'bold'
-      // ':hover': {
-      //   backgroundColor: 'lightgreen',
-      //   color: 'black'
-      // }
-    };
-
     let persons = null;
+    let btnClass = null;
 
     if (this.state.showPersons) {
       persons = (
         // use jsx format here
         <div>
           {this.state.persons.map((person, index) => {
-            return <Person 
-              click={() => this.deletePersonHandler(index)}
-              name={person.name}
-              age={person.age}
-              key={person.id}
-              changed={(event) => this.nameChangedHandler(event, person.id)} />
+            return <ErrorBoundary key={person.id}>
+              <Person 
+                click={() => this.deletePersonHandler(index)}
+                name={person.name}
+                age={person.age}
+                changed={(event) => this.nameChangedHandler(event, person.id)} />
+              </ErrorBoundary>
           })}
         </div>
       );
-      style.backgroundColor = 'red';
-      // style[':hover'] = {
-      //   backgroundColor: 'salmon',
-      //   color: 'black'
-      // }
+
+      btnClass = classes.Red
     }
 
     // add and assign classes dinamically
-    let classes = [];
+    const assClasses = [];
     if (this.state.persons.length <= 2) {
-      classes.push('red');
+      assClasses.push(classes.red);
     }
     if (this.state.persons.length <= 1) {
-      classes.push('bold');
+      assClasses.push(classes.bold);
     }
 
 
     return (
-      // <StyleRoot>
-        <div className="App">
+        <div className={classes.App}>
           <h1>Hi, I'm a React App</h1>
-          <p className={classes.join(' ')}>This is really working!</p>
+          <p className={assClasses.join(' ')}>This is really working!</p>
           <button
-            style={style}
-            onClick={this.togglePersonsHandler}>Toggler Persons</button>
+            className={btnClass}
+            onClick={this.togglePersonsHandler}>Toggle Persons</button>
           {persons}
         </div>
-      // </StyleRoot>
     );
   };
-  // return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Hi, I\'m a React App!!!'));
 };
 
-// export default Radium(App);
 export default App;
